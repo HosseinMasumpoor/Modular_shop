@@ -123,4 +123,5 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'default_paginate_number' => env('DEFAULT_PAGINATION_NUMBER', 10),
 ];
