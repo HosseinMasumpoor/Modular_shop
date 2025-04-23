@@ -3,5 +3,6 @@
     "Admin": true,
     "Blog": true,
     "Role": true,
-    "Auth": true
+    "User": true,
+    "Category": true
 }

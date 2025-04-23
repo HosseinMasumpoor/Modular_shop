@@ -15,6 +15,18 @@ if(!function_exists('successResponse')) {
     }
 }
 
+if(!function_exists('authSuccessResponse')) {
+    function authSuccessResponse($token, $expires_in, $message = '', $code = ResponseCode::OK): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'access_token' => $token,
+            'expires_in' => $expires_in,
+            'message' => $message,
+        ], $code);
+    }
+}
+
 if(!function_exists('failedResponse')) {
     function failedResponse($message, $code = ResponseCode::SERVER_ERROR): JsonResponse
     {

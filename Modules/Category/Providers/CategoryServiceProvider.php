@@ -1,26 +1,22 @@
 <?php
 
-namespace Modules\Core\Providers;
+namespace Modules\Category\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Category\Models\Category;
+use Modules\Category\Observers\CategoryObserver;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class CoreServiceProvider extends ServiceProvider
+class CategoryServiceProvider extends ServiceProvider
 {
     use PathNamespace;
 
-    protected array $helpers = [
-        __DIR__ . '/../Helpers/Response.php',
-        __DIR__ . '/../Helpers/Meta.php',
-        __DIR__ . '/../Helpers/Convert.php',
-    ];
+    protected string $name = 'Category';
 
-    protected string $name = 'Core';
-
-    protected string $nameLower = 'core';
+    protected string $nameLower = 'category';
 
     /**
      * Boot the application events.
@@ -33,7 +29,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
-        $this->loadHelpers();
+        $this->setObservers();
     }
 
     /**
@@ -69,7 +65,7 @@ class CoreServiceProvider extends ServiceProvider
      */
     public function registerTranslations(): void
     {
-        $langPath = resource_path('lang/modules/' . $this->nameLower);
+        $langPath = resource_path('lang/modules/'.$this->nameLower);
 
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, $this->nameLower);
@@ -109,10 +105,10 @@ class CoreServiceProvider extends ServiceProvider
      */
     public function registerViews(): void
     {
-        $viewPath = resource_path('views/modules/' . $this->nameLower);
+        $viewPath = resource_path('views/modules/'.$this->nameLower);
         $sourcePath = module_path($this->name, 'resources/views');
 
-        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower . '-module-views']);
+        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower.'-module-views']);
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
 
@@ -132,20 +128,16 @@ class CoreServiceProvider extends ServiceProvider
     {
         $paths = [];
         foreach (config('view.paths') as $path) {
-            if (is_dir($path . '/modules/' . $this->nameLower)) {
-                $paths[] = $path . '/modules/' . $this->nameLower;
+            if (is_dir($path.'/modules/'.$this->nameLower)) {
+                $paths[] = $path.'/modules/'.$this->nameLower;
             }
         }
 
         return $paths;
     }
 
-    private function loadHelpers(): void
+    private function setObservers()
     {
-        foreach($this->helpers as $helper) {
-            if(file_exists($helper)) {
-                require_once $helper;
-            }
-        }
+        Category::observe(CategoryObserver::class);
     }
 }
