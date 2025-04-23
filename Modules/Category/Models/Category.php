@@ -2,32 +2,31 @@
 
 namespace Modules\Category\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Modules\Project\Models\Project;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Category extends Model
 {
+    use Sluggable;
+    protected $table = 'categories';
     protected $guarded = [];
 
 
     /**
      * Relations
      */
-    public function projects(): BelongsToMany
+    public function parent(): BelongsTo
     {
-        return $this->belongsToMany(Project::class);
+        return $this->belongsTo(Category::class, 'parent_id');
     }
 
-
-    /**
-     * Scopes
-     */
-
-    public function scopeLocale($query, $locale = null)
+    public function sluggable(): array
     {
-        $locale = $locale ?? app()->getLocale();
-
-        return $query->where('locale', $locale);
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
     }
 }

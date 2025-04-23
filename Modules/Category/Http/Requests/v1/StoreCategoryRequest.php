@@ -24,8 +24,12 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|min:2|max:150',
-            'locale' => ['required', Rule::in(Locale::getValues())],
+            'name' => ['required','min:2', 'max:150'],
+            'slug' => ['nullable', 'min:2', 'max:190', 'unique:categories,slug'],
+            'parent_id' => ['nullable', 'exists:categories,id'],
+            'meta_title' => ['nullable', 'string', 'max:150'],
+            'meta_description' => ['nullable', 'string', 'max:500'],
+            'meta_keyword' => ['nullable', 'string', 'max:500'],
         ];
     }
 }

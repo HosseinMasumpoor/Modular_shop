@@ -23,8 +23,12 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|min:2|max:150',
-            'locale' => ['sometimes', Rule::in(\Modules\Core\Enums\Locale::getValues())],
+            'name' => ['sometimes','min:2', 'max:150'],
+            'slug' => ['nullable', 'min:2', 'max:190', 'unique:categories,slug,' . $this->id],
+            'parent_id' => ['nullable', 'exists:categories,id'],
+            'meta_title' => ['nullable', 'string', 'max:150'],
+            'meta_description' => ['nullable', 'string', 'max:500'],
+            'meta_keyword' => ['nullable', 'string', 'max:500'],
         ];
     }
 }
