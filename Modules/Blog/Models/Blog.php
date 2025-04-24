@@ -2,15 +2,17 @@
 
 namespace Modules\Blog\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 // use Modules\Blog\Database\Factories\BlogFactory;
 
 class Blog extends Model
 {
-    use HasFactory;
+    use HasFactory, Sluggable;
 
     protected $table = 'articles';
 
@@ -22,17 +24,19 @@ class Blog extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $guarded = [];
 
     /**
      * Accessors
      */
 
-    public function getImageUrlAttribute(){
+    public function getImageUrlAttribute(): string
+    {
         return route('api.articles.image', $this->id);
     }
 
-    public function getThumbnailUrlAttribute(){
+    public function getThumbnailUrlAttribute(): string
+    {
         return route('api.articles.thumbnail', $this->id);
     }
 
@@ -45,8 +49,21 @@ class Blog extends Model
         return $this->belongsTo(ArticleCategory::class);
     }
 
+    public function sections(): HasMany
+    {
+        return $this->hasMany(ArticleSection::class, 'article_id');
+    }
+
     // protected static function newFactory(): BlogFactory
     // {
     //     // return BlogFactory::new();
     // }
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title',
+            ]
+        ];
+    }
 }

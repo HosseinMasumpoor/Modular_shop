@@ -23,7 +23,7 @@ readonly class CategoryService
 
     public function update(array $data, string $id): bool
     {
-        return $this->repository->updateItem($data, $id);
+        return $this->repository->updateItem($id, $data);
     }
 
     public function delete(string $id): bool

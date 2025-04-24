@@ -27,6 +27,8 @@ class BlogService
     public function store(array $data)
     {
         $data["image"] = $this->storeFile($data["image"], $this->imageFolder);
+        $sections = $data["sections"];
+        unset($data["sections"]);
 
         if(isset($data["thumbnail"])){
             $data["thumbnail"] = $this->storeFile($data["thumbnail"], $this->thumbFolder);
@@ -35,12 +37,12 @@ class BlogService
         try{
             DB::beginTransaction();
             $article = $this->repository->newItem($data);
-
-            //TODO: most store sections
+            $article->sections()->createMany($sections);
             DB::commit();
             return $article;
-        }catch (Throwable){
+        }catch (Throwable $e){
             DB::rollBack();
+            dd($e->getMessage());
             return false;
         }
 
@@ -66,7 +68,9 @@ class BlogService
         try {
             DB::beginTransaction();
             $this->repository->updateItem($id, $data);
-            //TODO: most update sections
+            if(isset($sections)){
+                $this->repository->storeSections($id, $sections, true);
+            }
 
             DB::commit();
 

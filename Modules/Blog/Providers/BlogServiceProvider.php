@@ -4,6 +4,8 @@ namespace Modules\Blog\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Blog\Models\Blog;
+use Modules\Blog\Observers\BlogObserver;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -27,6 +29,7 @@ class BlogServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        $this->registerObservers();
     }
 
     /**
@@ -131,5 +134,10 @@ class BlogServiceProvider extends ServiceProvider
         }
 
         return $paths;
+    }
+
+    private function registerObservers(): void
+    {
+        Blog::observe(BlogObserver::class);
     }
 }

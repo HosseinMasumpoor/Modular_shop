@@ -20,4 +20,19 @@ class BlogRepository extends Repository
             ->thenReturn()
             ->orderByDesc('created_at');
     }
+
+    public function storeSections($id, $data, $hasSections = false): bool
+    {
+        $record = $this->findByField('id', $id);
+        $result = true;
+        if (!$hasSections) {
+            $result &= $record->sections()->delete();
+        }
+
+        foreach ($data as $item) {
+            $result &= (bool) $record->sections()->create($item);
+        }
+
+        return $result;
+    }
 }

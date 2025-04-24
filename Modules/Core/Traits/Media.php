@@ -17,8 +17,8 @@ trait Media
 
     private function deleteFile($data, $filedName, $folder): bool
     {
-        if($data->$filedName){
-            return StorageService::removeFileStorage("$folder/$data->$filedName");
+        if($data[$filedName]){
+            return StorageService::removeFileStorage("$folder/$data[$filedName]");
         }
         return false;
     }

@@ -29,7 +29,7 @@ class ArticleCategoryController extends CoreController
         $data = $request->validated();
         $result = $this->service->store($data);
         if($result) {
-            return successResponse($result);
+            return successResponse($result, __(self::SUCCESS_RESPONSE));
         }
         return failedResponse(__(self::ERROR_RESPONSE));
     }
@@ -41,7 +41,7 @@ class ArticleCategoryController extends CoreController
         $data = $request->validated();
         $result = $this->service->update($id, $data);
         if($result) {
-            return successResponse([]);
+            return successResponse([], __(self::SUCCESS_RESPONSE));
         }
         return failedResponse(__(self::ERROR_RESPONSE));
     }
@@ -52,7 +52,7 @@ class ArticleCategoryController extends CoreController
     public function destroy($id) {
         $result = $this->service->delete($id);
         if($result) {
-            return successResponse([]);
+            return successResponse([], __(self::SUCCESS_RESPONSE));
         }
         return failedResponse(__(self::ERROR_RESPONSE));
     }
