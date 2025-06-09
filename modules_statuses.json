@@ -4,5 +4,7 @@
     "Blog": true,
     "Role": true,
     "User": true,
-    "Category": true
+    "Category": true,
+    "FAQ": true,
+    "Product": true
 }

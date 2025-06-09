@@ -29,5 +29,6 @@ final class ResponseCode extends Enum
     const  NOT_CONFIRM = 512;
     const ACCEPTED = 202;
     const OK = 200;
-    const SERVER_ERROR = 200;
+    const SERVER_ERROR = 500;
+    const CREATED = 201;
 }

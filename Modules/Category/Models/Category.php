@@ -3,12 +3,14 @@
 namespace Modules\Category\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Category\database\factories\CategoryFactory;
 
 class Category extends Model
 {
-    use Sluggable;
+    use Sluggable, HasFactory;
     protected $table = 'categories';
     protected $guarded = [];
 
@@ -29,4 +31,9 @@ class Category extends Model
             ]
         ];
     }
+
+     protected static function newFactory(): CategoryFactory
+     {
+          return CategoryFactory::new();
+     }
 }
