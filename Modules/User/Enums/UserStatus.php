@@ -10,3 +10,12 @@ final class UserStatus extends Enum
     const ACTIVE = "active";
     const BLOCKED = "blocked";
 }
+
+enum UserStatusS: string
+{
+    case ACTIVE = "active";
+    case INACTIVE = "inactive";
+    case BLOCKED = "blocked";
+}
+
+UserStatusS::ACTIVE;

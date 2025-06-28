@@ -4,8 +4,10 @@ namespace Tests\Traits\Controllers;
 
 trait ResponseStructureTest
 {
-    public function assertPaginatedSuccessResponse($response, int $count, array $itemStructure): void
+    public function assertPaginatedSuccessResponse($response, int $count, array $itemStructure, $message = null): void
     {
+        $message = $message ?? "";
+
         $response->assertOk()
             ->assertJsonStructure([
                 'success',
@@ -30,9 +32,75 @@ trait ResponseStructureTest
             ])
             ->assertJson([
                 'success' => true,
-                'message' => '',
+                'message' => $message,
             ])
             ->assertJsonCount($count, 'data.data');
+    }
+
+    public function assertGetItemsSuccessResponse($response, int $count, array $itemStructure, $message = null): void
+    {
+        $message = $message ?? "";
+
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    '*' => $itemStructure
+                ],
+                'message',
+            ])
+            ->assertJson([
+                'success' => true,
+                'message' => $message,
+            ])
+            ->assertJsonCount($count, 'data');
+    }
+
+    public function assertSingleItemSuccessResponse($response, array $itemStructure, $message = null): void
+    {
+        $message = $message ?? "";
+
+        $response->assertJsonStructure([
+            'success',
+            'data' => $itemStructure,
+            'message',
+        ])->assertJson([
+            'success' => true,
+            'message' => $message,
+        ]);
+    }
+
+    public function assertCreateItemSuccessResponse($response, $message = null): void
+    {
+        $message = $message ?? __('core::messages.success');
+
+        $response->assertJson([
+            'success' => true,
+            'data' => [],
+            'message' => $message,
+        ]);
+    }
+
+    public function assertUpdateItemSuccessResponse($response, $message = null): void
+    {
+        $message = $message ?? __('core::messages.success');
+
+        $response->assertJson([
+            'success' => true,
+            'data' => [],
+            'message' => $message,
+        ]);
+    }
+
+    public function assertDeleteItemSuccessResponse($response, $message = null): void
+    {
+        $message = $message ?? __('core::messages.success');
+
+        $response->assertJson([
+            'success' => true,
+            'data' => [],
+            'message' => $message,
+        ]);
     }
 
 }

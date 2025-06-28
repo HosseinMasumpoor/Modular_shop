@@ -49,6 +49,16 @@ trait TestRepository
         $item = $modelClass::factory()->create();
         $repository->remove($item->id);
 
-        $this->assertDatabaseMissing((new $modelClass)->getTable(), ['id' => $item->id]);
+        $usesSoftDeletes = in_array(
+            \Illuminate\Database\Eloquent\SoftDeletes::class,
+            class_uses_recursive($modelClass)
+        );
+
+        if ($usesSoftDeletes) {
+            $this->assertSoftDeleted((new $modelClass)->getTable(), ['id' => $item->id]);
+        } else {
+            $this->assertDatabaseMissing((new $modelClass)->getTable(), ['id' => $item->id]);
+        }
+
     }
 }

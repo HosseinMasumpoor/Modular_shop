@@ -2,6 +2,7 @@
 
 namespace Modules\Product\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,7 +10,7 @@ use Modules\Product\Database\Factories\BrandFactory;
 
 class Brand extends Model
 {
-    use HasFactory;
+    use HasFactory, Sluggable;
 
     protected $table = 'brands';
 
@@ -39,4 +40,13 @@ class Brand extends Model
      {
          return $this->hasMany(Product::class);
      }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
 }

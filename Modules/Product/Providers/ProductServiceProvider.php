@@ -2,8 +2,10 @@
 
 namespace Modules\Product\Providers;
 
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Product\database\seeders\VariantTypeSeeder;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -27,6 +29,7 @@ class ProductServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        $this->registerSeeder();
     }
 
     /**
@@ -131,5 +134,10 @@ class ProductServiceProvider extends ServiceProvider
         }
 
         return $paths;
+    }
+
+    private function registerSeeder(): void
+    {
+        DatabaseSeeder::$seeders[] = VariantTypeSeeder::class;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Modules\Admin\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Admin\Database\Factories\AdminFactory;
 use Modules\Role\Models\AdminRole;
 use Modules\Role\Models\Role;
 use Illuminate\Auth\Authenticatable;
@@ -11,10 +13,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Admin extends Model
+class Admin extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 {
 
-    use SoftDeletes,HasApiTokens,Notifiable,Authenticatable;
+    use HasFactory, SoftDeletes,HasApiTokens,Notifiable,Authenticatable;
     protected $guarded=[];
     protected $hidden=['password'];
 
@@ -24,6 +26,11 @@ class Admin extends Model
         "password",
         "role_id",
     ];
+
+    protected static function newFactory(): AdminFactory
+    {
+        return AdminFactory::new();
+    }
 
 
     public function role(): HasOneThrough

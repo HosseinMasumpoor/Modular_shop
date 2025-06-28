@@ -19,7 +19,12 @@ class ProductVariantTypeValue extends Model
     protected $fillable = [
         'variant_type_id',
         'value',
+        'meta',
         'slug'
+    ];
+
+    protected $casts = [
+        'meta' => 'array',
     ];
 
      protected static function newFactory(): ProductVariantTypeValueFactory

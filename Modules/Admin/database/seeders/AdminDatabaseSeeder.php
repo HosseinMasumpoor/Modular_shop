@@ -17,5 +17,6 @@ class AdminDatabaseSeeder extends Seeder
             "username" => "hossein",
             "password" => Hash::make("12345678"),
             "name" => "Hossein Masumpoor"
-        ]);    }
+        ]);
+    }
 }

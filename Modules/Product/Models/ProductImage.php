@@ -11,6 +11,11 @@ class ProductImage extends Model
 {
     use HasFactory;
 
+    protected $appends = [
+        'image_url',
+        'thumbnail_url',
+    ];
+
     /**
      * The attributes that are mass assignable.
      */
@@ -35,5 +40,18 @@ class ProductImage extends Model
      public function product(): BelongsTo
      {
          return $this->belongsTo(Product::class);
+     }
+
+     /**
+      * Accessors
+      */
+     public function getImageUrlAttribute(): string
+     {
+         return route('api.products.image.get-image', $this->id);
+     }
+
+     public function getThumbnailUrlAttribute(): string
+     {
+         return route('api.products.image.get-thumbnail', $this->id);
      }
 }

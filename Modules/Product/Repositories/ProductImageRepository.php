@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pipeline\Pipeline;
 use Modules\Core\Repositories\Repository;
 use Modules\FAQ\Models\FAQ;
+use Modules\Product\Enums\ProductImageType;
 use Modules\Product\Models\Product;
 use Modules\Product\Models\ProductAttribute;
 use Modules\Product\Models\ProductImage;
@@ -33,5 +34,14 @@ class ProductImageRepository extends Repository
             )
             ->thenReturn()
             ->orderBy('order');
+    }
+
+    public function updateByFields(array $fields, array $data): bool
+    {
+        $record = $this->getByFields($fields)->first();
+        foreach($data as $key => $value) {
+            $record->{$key} = $value;
+        }
+        return $record->save();
     }
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('variant_type_id')->constrained('variant_types');
             $table->string('value');
             $table->string('slug');
+            $table->json('meta')->nullable();
             $table->smallInteger('order')->default(0);
             $table->timestamps();
         });

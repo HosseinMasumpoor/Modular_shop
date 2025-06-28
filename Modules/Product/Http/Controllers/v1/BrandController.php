@@ -2,19 +2,16 @@
 
 namespace Modules\Product\Http\Controllers\v1;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Core\Enums\ResponseCode;
 use Modules\Core\Http\Controllers\CoreController;
-use Modules\Product\Http\Requests\Product\BrandStoreRequest;
-use Modules\Product\Http\Requests\Product\BrandUpdateRequest;
-use Modules\Product\Http\Requests\Product\ProductStoreRequest;
-use Modules\Product\Http\Requests\Product\ProductUpdateRequest;
-use Modules\Product\Services\ProductService;
+use Modules\Product\Http\Requests\Brand\BrandStoreRequest;
+use Modules\Product\Http\Requests\Brand\BrandUpdateRequest;
+use Modules\Product\Services\BrandService;
 
-class ProductController extends CoreController
+class BrandController extends CoreController
 {
-    public function __construct(private readonly ProductService $service)
+    public function __construct(private readonly BrandService $service)
     {
     }
 
@@ -23,14 +20,14 @@ class ProductController extends CoreController
      */
     public function index(Request $request)
     {
-        $products = $this->service->list()->paginate($request->per_page ?? config('app.default_paginate_number'));
+        $products = $this->service->list()->get();
         return successResponse($products);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductStoreRequest $request)
+    public function store(BrandStoreRequest $request)
     {
         $result = $this->service->store($request->validated());
         if($result){
@@ -51,7 +48,7 @@ class ProductController extends CoreController
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductUpdateRequest $request, $id)
+    public function update(BrandUpdateRequest $request, $id)
     {
         $result = $this->service->update($id, $request->validated());
         if($result){
@@ -70,5 +67,11 @@ class ProductController extends CoreController
             return successResponse([], __(self::SUCCESS_RESPONSE));
         }
         return failedResponse(__(self::ERROR_RESPONSE));
+    }
+
+    public function getLogo(string $id)
+    {
+        $logo =  $this->service->getLogo($id);
+        return fileResponse($logo);
     }
 }

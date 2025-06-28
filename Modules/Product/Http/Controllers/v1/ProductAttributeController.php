@@ -6,34 +6,35 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Core\Enums\ResponseCode;
 use Modules\Core\Http\Controllers\CoreController;
-use Modules\Product\Http\Requests\Product\BrandStoreRequest;
-use Modules\Product\Http\Requests\Product\BrandUpdateRequest;
-use Modules\Product\Http\Requests\Product\ProductStoreRequest;
-use Modules\Product\Http\Requests\Product\ProductUpdateRequest;
-use Modules\Product\Services\ProductService;
+use Modules\Product\Http\Requests\v1\ProductAttribute\ProductAttributeStoreRequest;
+use Modules\Product\Http\Requests\v1\ProductAttribute\ProductAttributeUpdateRequest;
+use Modules\Product\Services\ProductAttributeService;
 
-class ProductController extends CoreController
+class ProductAttributeController extends CoreController
 {
-    public function __construct(private readonly ProductService $service)
+
+    public function __construct(private readonly ProductAttributeService $service)
     {
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(string $productId)
     {
-        $products = $this->service->list()->paginate($request->per_page ?? config('app.default_paginate_number'));
-        return successResponse($products);
+        $data = $this->service->findByProductId($productId);
+        return successResponse($data);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductStoreRequest $request)
-    {
-        $result = $this->service->store($request->validated());
-        if($result){
+    public function store(ProductAttributeStoreRequest $request) {
+        $data = $request->validated();
+        $result = $this->service->store($data);
+
+        if($result)
+        {
             return successResponse([], __(self::SUCCESS_RESPONSE), ResponseCode::CREATED);
         }
         return failedResponse(__(self::ERROR_RESPONSE));
@@ -44,17 +45,19 @@ class ProductController extends CoreController
      */
     public function show($id)
     {
-        $data = $this->service->findById($id);
-        return successResponse($data);
+        $result = $this->service->findById($id);
+        return successResponse($result);
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductUpdateRequest $request, $id)
-    {
-        $result = $this->service->update($id, $request->validated());
-        if($result){
+    public function update(ProductAttributeUpdateRequest $request, $id) {
+        $data = $request->validated();
+        $result = $this->service->update($id, $data);
+        if($result)
+        {
             return successResponse([], __(self::SUCCESS_RESPONSE));
         }
         return failedResponse(__(self::ERROR_RESPONSE));
@@ -63,10 +66,10 @@ class ProductController extends CoreController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $result = $this->service->delete($id);
-        if($result){
+        if($result)
+        {
             return successResponse([], __(self::SUCCESS_RESPONSE));
         }
         return failedResponse(__(self::ERROR_RESPONSE));
